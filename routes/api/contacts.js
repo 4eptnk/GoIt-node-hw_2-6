@@ -1,24 +1,30 @@
 const express = require('express')
+
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const {
+  getContactsList,
+  getContactById,
+  addContact,
+  deleteContactById,
+  updateContactById,
+  updateStatusContact,
+} = require('../../controllers/contactsControllers')
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const { validateContactId, validateContact, validateUpdateContact, validateStatusContact } = require('./validation.js')
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/', getContactsList)
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/:contactId', validateContactId, getContactById)
 
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.post('/', validateContact, addContact)
+
+router.delete('/:contactId', validateContactId, deleteContactById)
+
+router.put('/:contactId', validateContactId, validateUpdateContact, updateContactById)
+
+router.patch('/:contactId', [validateContactId, validateUpdateContact], updateContactById)
+
+router.patch('/:contactId/favorite', [validateContactId, validateStatusContact], updateStatusContact)
 
 module.exports = router
